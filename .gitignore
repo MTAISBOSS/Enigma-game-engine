@@ -1,41 +1,85 @@
-# Prerequisites
-*.d
+### Build folders ###
+build/
+build-*/
+cmake-build-*/
+out/
+bin/
+obj/
 
-# Compiled Object files
-*.slo
-*.lo
+### CMake generated files ###
+CMakeCache.txt
+CMakeFiles/
+CTestTestfile.cmake
+cmake_install.cmake
+install_manifest.txt
+Makefile
+*.cmake.user
+*.ninja
+*.ninja_deps
+*.ninja_log
+
+### Compiled object files ###
 *.o
 *.obj
+*.lo
+*.slo
 
-# Precompiled Headers
+### Precompiled headers ###
 *.gch
 *.pch
 
-# Linker files
-*.ilk
-
-# Debugger Files
-*.pdb
-
-# Compiled Dynamic libraries
+### Static & dynamic libs ###
+*.a
+*.la
+*.lib
+*.lai
 *.so
+*.so.*
 *.dylib
 *.dll
 
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
+### Executables ###
 *.exe
 *.out
 *.app
 
-# debug information files
+### Debug / profiling / compiler files ###
+*.d
+*.dSYM/
+*.pdb
+*.ilk
 *.dwo
+
+### VSCode ###
+.vscode/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+### CLion / JetBrains ###
+.idea/
+*.iml
+
+### NuGet / package cache (local binaries) ###
+packages/**/native/bin/
+packages/**/native/lib/
+packages/**/*.nupkg
+packages/**/build/**/bin/
+packages/**/build/**/lib/
+
+# Allow header-only includes from packages
+!packages/**/include/
+!packages/**/build/native/include/
+
+### Logs ###
+logs/
+*.log
+
+### OS-specific files ###
+# macOS
+.DS_Store
+# Windows thumbnail caches
+Thumbs.db
+desktop.ini
