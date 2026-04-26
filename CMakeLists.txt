@@ -15,6 +15,7 @@ add_executable(Enigma
         src/Systems/MovementSystem.h
         src/ECS/ECS.h
         src/ECS/ECS.cpp
+        src/Components/RigidBodyComponent.h
 )
 
 target_include_directories(Enigma PRIVATE

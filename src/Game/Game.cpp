@@ -1,17 +1,18 @@
 #include "Game.h"
 #include "SDL_image.h"
-#include "../Logger/Logger.h"
-#include "glm/glm.hpp"
+#include "../Components/TransformComponent.h"
+#include "../Components/RigidBodyComponent.h"
 
 Game::Game() {
-    isRunning = false;
     Logger::EnableWindowsANSI();
+
+    isRunning = false;
+    registry = std::make_unique<Registry>();
     Logger::Log("Game constructor called!");
 }
 
 Game::~Game() {
     Logger::Log("Game destructor called!");
-
 }
 
 void Game::Initialize() {
@@ -70,6 +71,9 @@ void Game::ProcessInput() {
 
 
 void Game::Setup() {
+    Entity tank = registry->CreateEntity();
+    registry->AddComponent<TransformComponent>(tank, glm::vec2(10.0, 30.0), glm::vec2(1.0, 1.0), 0.0);
+    registry->AddComponent<RigidBodyComponent>(tank, glm::vec2(50.0, 0.0));
 
 }
 
@@ -86,7 +90,7 @@ void Game::Update() {
 void Game::Render() {
     SDL_SetRenderDrawColor(renderer, 21, 21, 21, 255);
     SDL_RenderClear(renderer);
-    
+
 
     SDL_RenderPresent(renderer);
 }
