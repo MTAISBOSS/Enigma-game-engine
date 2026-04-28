@@ -2,12 +2,16 @@
 #include "SDL_image.h"
 #include "../Components/TransformComponent.h"
 #include "../Components/RigidBodyComponent.h"
+#include "../Systems/MovementSystem.h"
+#include "../Components/SpriteComponent.h"
+#include "../Systems/RenderSystem.h"
 
 Game::Game() {
     Logger::EnableWindowsANSI();
 
     isRunning = false;
     registry = std::make_unique<Registry>();
+    assetStore = std::make_unique<AssetStore>();
     Logger::Log("Game constructor called!");
 }
 
@@ -70,11 +74,32 @@ void Game::ProcessInput() {
 }
 
 
-void Game::Setup() {
-    Entity tank = registry->CreateEntity();
-    registry->AddComponent<TransformComponent>(tank, glm::vec2(10.0, 30.0), glm::vec2(1.0, 1.0), 0.0);
-    registry->AddComponent<RigidBodyComponent>(tank, glm::vec2(50.0, 0.0));
+void Game::LoadLevel(int id){
 
+    registry->AddSystem<MovementSystem>();
+    registry->AddSystem<RenderSystem>();
+
+    assetStore->AddTexture(renderer,"tank-image","../assets/images/tank-panther-right.png");
+    assetStore->AddTexture(renderer,"truck-image","../assets/images/truck-ford-right.png");
+
+    Entity tank = registry->CreateEntity();
+    // registry->AddComponent<TransformComponent>(tank, glm::vec2(10.0, 30.0), glm::vec2(1.0, 1.0), 0.0);
+    // registry->AddComponent<RigidBodyComponent>(tank, glm::vec2(50.0, 0.0));
+    tank.AddComponent<TransformComponent>(glm::vec2(10.0, 30.0), glm::vec2(1.0, 1.0), 50.0);
+    tank.AddComponent<RigidBodyComponent>(glm::vec2(50.0, 0.0));
+    tank.AddComponent<SpriteComponent>("tank-image",32, 32);
+
+
+    Entity truck = registry->CreateEntity();
+    // registry->AddComponent<TransformComponent>(tank, glm::vec2(10.0, 30.0), glm::vec2(1.0, 1.0), 0.0);
+    // registry->AddComponent<RigidBodyComponent>(tank, glm::vec2(50.0, 0.0));
+    truck.AddComponent<TransformComponent>(glm::vec2(50.0, 10.0), glm::vec2(1.0, 1.0), 0.0);
+    truck.AddComponent<RigidBodyComponent>(glm::vec2(50.0, 3.0));
+    truck.AddComponent<SpriteComponent>("truck-image",32, 32);
+    //tank.RemoveComponent<TransformComponent>();
+}
+void Game::Setup() {
+    LoadLevel(1);
 }
 
 void Game::Update() {
@@ -85,13 +110,16 @@ void Game::Update() {
 
     double deltaTime = (SDL_GetTicks() - millisecsPreviousFrame) / 1000.0;
     millisecsPreviousFrame = SDL_GetTicks();
+
+    registry->GetSystem<MovementSystem>().Update(deltaTime);
+    registry->Update();
 }
 
 void Game::Render() {
     SDL_SetRenderDrawColor(renderer, 21, 21, 21, 255);
     SDL_RenderClear(renderer);
 
-
+    registry->GetSystem<RenderSystem>().Update(renderer,assetStore);
     SDL_RenderPresent(renderer);
 }
 

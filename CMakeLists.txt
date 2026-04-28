@@ -16,6 +16,10 @@ add_executable(Enigma
         src/ECS/ECS.h
         src/ECS/ECS.cpp
         src/Components/RigidBodyComponent.h
+        src/Systems/RenderSystem.h
+        src/Components/SpriteComponent.h
+        src/AssetStore/AssetStore.cpp
+        src/AssetStore/AssetStore.h
 )
 
 target_include_directories(Enigma PRIVATE

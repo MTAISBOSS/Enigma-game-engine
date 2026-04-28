@@ -21,7 +21,7 @@ void System::RemoveEntityToSystem(Entity entity) {
             entities.end());
 }
 
-std::vector<Entity> System::GetSystemEntities() const {
+const std::vector<Entity>& System::GetSystemEntities() const {
     return entities;
 }
 
@@ -35,6 +35,7 @@ Entity Registry::CreateEntity() {
         entityComponentSignatures.resize(entityId + 1);
     }
     Entity entity(entityId);
+    entity.registry = this;
     entitiesToBeAdded.insert(entity);
 
     if (entityId >= entityComponentSignatures.size()) {
@@ -65,5 +66,6 @@ void Registry::AddEntityToSystems(Entity entity) {
         }
     }
 }
+
 
 

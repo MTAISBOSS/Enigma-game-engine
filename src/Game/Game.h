@@ -3,7 +3,9 @@
 
 #include "SDL.h"
 #include "../ECS/ECS.h"
+#include "../AssetStore/AssetStore.h"
 #include <memory>
+
 const int FPS = 30;
 const int MILLISECS_PER_FRAME = 1000 / FPS;
 
@@ -15,6 +17,8 @@ private:
     int millisecsPreviousFrame = 0;
 
     std::unique_ptr<Registry> registry;
+    std::unique_ptr<AssetStore> assetStore;
+
 public:
     Game();
 
@@ -34,6 +38,8 @@ public:
 
     int windowWidth;
     int windowHeight;
+
+    void LoadLevel(int id);
 
     void Setup();
 };
