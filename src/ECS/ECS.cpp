@@ -10,7 +10,7 @@ void System::AddEntityToSystem(Entity entity) {
     entities.push_back(entity);
 }
 
-void System::RemoveEntityToSystem(Entity entity) {
+void System::RemoveEntityFromSystem(Entity entity) {
     entities.erase(
             std::remove_if(
                     entities.begin(),
@@ -21,7 +21,7 @@ void System::RemoveEntityToSystem(Entity entity) {
             entities.end());
 }
 
-const std::vector<Entity>& System::GetSystemEntities() const {
+const std::vector<Entity> &System::GetSystemEntities() const {
     return entities;
 }
 
@@ -30,10 +30,17 @@ const Signature &System::GetComponentSignature() const {
 }
 
 Entity Registry::CreateEntity() {
-    int entityId = numberOfEntities++;
-    if (entityId >= entityComponentSignatures.size()) {
-        entityComponentSignatures.resize(entityId + 1);
+    int entityId;
+    if (freeIds.empty()) {
+        entityId = numberOfEntities++;
+        if (entityId >= entityComponentSignatures.size()) {
+            entityComponentSignatures.resize(entityId + 1);
+        }
+    } else {
+        entityId = freeIds.front();
+        freeIds.pop_front();
     }
+
     Entity entity(entityId);
     entity.registry = this;
     entitiesToBeAdded.insert(entity);
@@ -46,11 +53,23 @@ Entity Registry::CreateEntity() {
     return entity;
 }
 
+void Entity::Kill(){
+    registry->KillEntity(*this);
+}
 void Registry::Update() {
     for (auto entity: entitiesToBeAdded) {
         AddEntityToSystems(entity);
     }
     entitiesToBeAdded.clear();
+
+    for (auto entity: entitiesToBeKilled) {
+        RemoveEntityFromSystems(entity);
+
+        entityComponentSignatures[entity.GetId()].reset();
+
+        freeIds.push_back(entity.GetId());
+    }
+    entitiesToBeKilled.clear();
 }
 
 void Registry::AddEntityToSystems(Entity entity) {
@@ -66,6 +85,17 @@ void Registry::AddEntityToSystems(Entity entity) {
         }
     }
 }
+
+void Registry::RemoveEntityFromSystems(Entity entity) {
+    for (auto system: systems) {
+        system.second->RemoveEntityFromSystem(entity);
+    }
+}
+
+void Registry::KillEntity(const Entity &entity) {
+    entitiesToBeKilled.insert(entity);
+}
+
 
 
 

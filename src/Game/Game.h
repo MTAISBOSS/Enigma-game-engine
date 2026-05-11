@@ -14,10 +14,12 @@ private:
     SDL_Window *window;
     SDL_Renderer *renderer;
     bool isRunning;
+    bool isDebug;
     int millisecsPreviousFrame = 0;
 
     std::unique_ptr<Registry> registry;
     std::unique_ptr<AssetStore> assetStore;
+    std::unique_ptr<EventBus> eventBus;
 
 public:
     Game();

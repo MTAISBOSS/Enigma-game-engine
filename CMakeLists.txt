@@ -20,6 +20,13 @@ add_executable(Enigma
         src/Components/SpriteComponent.h
         src/AssetStore/AssetStore.cpp
         src/AssetStore/AssetStore.h
+        src/Components/AnimationComponent.h
+        src/Systems/AnimationSystem.h
+        src/Systems/CollisionSystem.h
+        src/Components/BoxColliderComponent.h
+        src/Systems/RenderColliderSystem.h
+        src/Events/CollisionEvent.h
+        src/EventBus/EventBus.h
 )
 
 target_include_directories(Enigma PRIVATE

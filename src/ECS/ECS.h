@@ -8,6 +8,7 @@
 #include <set>
 #include "../Logger/Logger.h"
 #include <string>
+#include <deque>
 
 const unsigned int MAX_COMPONENTS = 32;
 typedef std::bitset<MAX_COMPONENTS> Signature;
@@ -36,6 +37,8 @@ public:
     Entity(int id) : id(id) {};
 
     Entity(const Entity &entity) = default;
+
+    void Kill();
 
     int GetId() const;
 
@@ -77,9 +80,9 @@ public:
 
     void AddEntityToSystem(Entity entity);
 
-    void RemoveEntityToSystem(Entity entity);
+    void RemoveEntityFromSystem(Entity entity);
 
-    const std::vector<Entity>& GetSystemEntities() const;
+    const std::vector<Entity> &GetSystemEntities() const;
 
     const Signature &GetComponentSignature() const;
 
@@ -134,7 +137,7 @@ public:
         data[index] = object;
     }
 
-    TPool& Get(int index) {
+    TPool &Get(int index) {
         return data[index];
     }
 
@@ -155,7 +158,7 @@ private:
     std::vector<Signature> entityComponentSignatures;
 
     std::unordered_map<std::type_index, std::shared_ptr<System>> systems;
-
+    std::deque<int> freeIds;
 public:
     //Registry() = default;
     Registry() {
@@ -173,6 +176,8 @@ public:
     void Update();
 
     void AddEntityToSystems(Entity entity);
+
+    void RemoveEntityFromSystems(Entity entity);
 
     template<typename T, typename ...TArgs>
     void AddComponent(Entity entity, TArgs &&...args);
